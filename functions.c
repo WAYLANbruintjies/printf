@@ -32,7 +32,7 @@ int print_char(va_list types, char buffer[],
 int print_string(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int length = 0, n;
+	int leng = 0, n;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
@@ -47,36 +47,36 @@ int print_string(va_list types, char buffer[],
 			str = "      ";
 	}
 
-	while (str[length] != '\0')
-		length++;
+	while (str[leng] != '\0')
+		leng++;
 
-	if (precision >= 0 && precision < length)
-		length = precision;
+	if (precision >= 0 && precision < leng)
+		leng = precision;
 
-	if (width > length)
+	if (width > leng)
 	{
 		if (flags & F_MINUS)
 		{
-			write(1, &str[0], length);
-			for (n = width - length; n > 0; n--)
+			write(1, &str[0], leng);
+			for (n = width - leng; n > 0; n--)
 				write(1, " ", 1);
 			return (width);
 		}
 		else
 		{
-			for (n = width - length; n > 0; n--)
+			for (n = width - leng; n > 0; n--)
 				write(1, " ", 1);
-			write(1, &str[0], length);
+			write(1, &str[0], leng);
 			return (width);
 		}
 	}
 
-	return (write(1, str, length));
+	return (write(1, str, leng));
 }
 /***# PRINT A PERCENT (%) SIGN #***/
 /**
  * print_percent - Prints the percent sign
- * @types: List a of arguments
+ * @types: List arguments
  * @buffer: Array to handle print
  * @flags: Computes active flags
  * @width: Width
@@ -110,10 +110,10 @@ int print_percent(va_list types, char buffer[],
 int print_int(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int i = BUFF_SIZE - 2;
-	int is_negative = 0;
-	long int n = va_arg(types, long int);
 	unsigned long int num;
+	int i = BUFF_SIZE - 2;
+	long int n = va_arg(types, long int);
+	int is_negative = 0;
 
 	n = convert_size_number(n, size);
 

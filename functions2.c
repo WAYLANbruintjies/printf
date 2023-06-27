@@ -14,11 +14,11 @@
 int print_pointer(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	char c = 0, padd = ' ';
+	void *addrs = va_arg(types, void *);
 	int index = BUFF_SIZE - 2, length = 2, padd_start = 1;
 	unsigned long num_address;
+	char c = 0, padd = ' ';
 	char map_to[] = "0123456789abcdef";
-	void *addrs = va_arg(types, void *);
 
 	UNUSED(width);
 	UNUSED(size);
@@ -66,7 +66,7 @@ int print_pointer(va_list types, char buffer[],
 int print_non_printable(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int i = 0, offset = 0;
+	int b = 0, offset = 0;
 	char *str = va_arg(types, char *);
 
 	UNUSED(flags);
@@ -77,19 +77,19 @@ int print_non_printable(va_list types, char buffer[],
 	if (str == NULL)
 		return (write(1, "(null)", 6));
 
-	while (str[i] != '\0')
+	while (str[b] != '\0')
 	{
-		if (is_printable(str[i]))
-			buffer[i + offset] = str[i];
+		if (is_printable(str[b]))
+			buffer[b + offset] = str[b];
 		else
-			offset += append_hexa_code(str[i], buffer, i + offset);
+			offset += append_hexa_code(str[b], buffer, b + offset);
 
-		i++;
+		b++;
 	}
 
-	buffer[i + offset] = '\0';
+	buffer[b + offset] = '\0';
 
-	return (write(1, buffer, i + offset));
+	return (write(1, buffer, b + offset));
 }
 
 /***# PRINT REVERSE #***/
@@ -149,11 +149,11 @@ int print_reverse(va_list types, char buffer[],
 int print_rot13string(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	char x;
 	char *str;
 	unsigned int a, b;
 	int count = 0;
-	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
 
 	str = va_arg(types, char *);
